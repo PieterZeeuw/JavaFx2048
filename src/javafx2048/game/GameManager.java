@@ -16,30 +16,37 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
+import javafx2048.GameBoardController;
 
 /**
  *
  * @author pczee
  */
-public class Game {
+public class GameManager {
 
     private volatile boolean movingTiles = false;
     private final List<Location> locations = new ArrayList<>();
-    private final Map<Location, GameTile> gameGrid;
-    private final Set<GameTile> mergedToBeRemoved = new HashSet<>();
+    private final Map<Location, Tile> gameGrid;
+    private final Set<Tile> mergedToBeRemoved = new HashSet<>();
 
-    //private final Board board;
+    private final GameBoardController board;
     private final GridOperator gridOperator;
 
-    public Game(int gridSize) {
+    public GameManager(GameBoardController board) {
+        this(GridOperator.DEFAULT_GRID_SIZE, board);
+    }
+
+    public GameManager(int gridSize, GameBoardController board) {
+        
+        this.board = board;
         this.gameGrid = new HashMap<>();
 
         gridOperator = new GridOperator(gridSize);
         //board = new Board(gridOperator);
-        this.getChildren().add(board);
+        //this.getChildren().add(board);
     }
-    
-        /**
+
+    /**
      * Initializes all cells in gameGrid map to null
      */
     private void initializeGameGrid() {
@@ -57,28 +64,26 @@ public class Game {
      * Starts the game by adding 1 or 2 tiles at random locations
      */
     private void startGame() {
-        GameTile tile0 = GameTile.newRandomTile();
+        Tile tile0 = Tile.newRandomTile();
         List<Location> randomLocs = new ArrayList<>(locations);
         Collections.shuffle(randomLocs);
         Iterator<Location> locs = randomLocs.stream().limit(2).iterator();
         tile0.setLocation(locs.next());
 
-        GameTile tile1 = null;
+        Tile tile1 = null;
         if (new Random().nextFloat() <= 0.8) { // gives 80% chance to add a second tile
-            tile1 = GameTile.newRandomTile();
+            tile1 = Tile.newRandomTile();
             if (tile1.getValue() == 4 && tile0.getValue() == 4) {
-                tile1 = GameTile.newTile(2);
+                tile1 = Tile.newTile(2);
             }
             tile1.setLocation(locs.next());
         }
 
         Arrays.asList(tile0, tile1).stream().filter(Objects::nonNull)
                 .forEach(t -> gameGrid.put(t.getLocation(), t));
-        
-        redrawTilesInGameGrid();
 
-        board.startGame();
+        //redrawTilesInGameGrid();
+        //board.startGame();
     }
-    
 
 }

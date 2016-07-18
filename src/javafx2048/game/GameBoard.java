@@ -10,12 +10,9 @@ package javafx2048.game;
  * @author pczee
  */
 public class GameBoard {
-    private GameTile[] gameTiles;
+    private Tile[] gameTiles;
     
     public GameBoard () {
-        gameTiles = new GameTile[12];
-        for (int i=0; i<12;i++) {
-            gameTiles[i] = new GameTile ();
-        }
+
     }
 }

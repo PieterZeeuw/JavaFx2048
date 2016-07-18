@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx2048.game.GameManager;
 
 /**
  *
@@ -19,10 +20,17 @@ public class JavaFX2048 extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("GameBoard.fxml"));
+        
+        FXMLLoader loader = new FXMLLoader ();        
+        loader.setLocation(getClass().getResource("GameBoard.fxml"));
+        
+        Parent root = loader.load();
+        GameBoardController controller = (GameBoardController) loader.getController();
+        
+        GameManager gameManager = new GameManager (controller);
         
         Scene scene = new Scene(root);
-        
+        scene.getStylesheets().add("javafx2048/game.css");
         stage.setScene(scene);
         stage.show();
     }

@@ -12,27 +12,27 @@ import java.util.Random;
  *
  * @author pczee
  */
-public class GameTile {
+public class Tile {
 
     private Integer value;
     private Location location;
     private Boolean merged;
 
-    public static GameTile newRandomTile() {
+    public static Tile newRandomTile() {
         int value = new Random().nextDouble() < 0.9 ? 2 : 4;
-        return new GameTile(value);
+        return new Tile(value);
     }
 
-    public static GameTile newTile(int value) {
-        return new GameTile(value);
+    public static Tile newTile(int value) {
+        return new Tile(value);
     }
 
-    public GameTile(int value) {
+    public Tile(int value) {
         this.value = value;
         this.merged = false;
     }
 
-    public void merge(GameTile another) {
+    public void merge(Tile another) {
         this.value += another.getValue();
         merged = true;
     }
@@ -62,7 +62,7 @@ public class GameTile {
         merged = false;
     }
 
-    public boolean isMergeable(Optional<GameTile> anotherTile) {
+    public boolean isMergeable(Optional<Tile> anotherTile) {
         return anotherTile.filter(t -> t.getValue().equals(getValue())).isPresent();
     }
 }
