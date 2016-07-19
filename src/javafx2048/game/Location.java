@@ -26,6 +26,11 @@ public class Location {
     public int getY() {
         return y;
     }
+    
+    public int convertToArrayIndex () {
+        return x + GridOperator.DEFAULT_GRID_SIZE *y;
+    }
+    
 
     @Override
     public String toString() {

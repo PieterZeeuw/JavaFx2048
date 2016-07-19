@@ -8,6 +8,8 @@ package javafx2048;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
+import java.util.Map.Entry;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,17 +20,24 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx2048.game.GameManager;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx2048.game.GridOperator;
+import javafx2048.game.Location;
 import javafx2048.game.SessionManager;
+import javafx2048.game.Tile;
 
 /**
  *
@@ -115,8 +124,12 @@ public class GameBoardController {
     private GridOperator gridOperator;
     private SessionManager sessionManager;
 
-    public void GameBoardController() {
+    private GameManager gameManager;
 
+    public void GameBoardController() {
+        gameManager = new GameManager();
+        gameManager.setGridOperator(new GridOperator());
+        startGame ();
     }
 
     @FXML
@@ -126,6 +139,14 @@ public class GameBoardController {
         initBestScoreLabels();
         initTimeLabel();
         initPointsLabel();
+        //redrawGameGrid();
+        
+    }
+
+    public void startGame() {
+//        time = LocalTime.now();
+//        timer.playFromStart();
+        redrawGameGrid(gameManager.getGameGrid());
     }
 
     // Function for adding style to labels:
@@ -161,9 +182,50 @@ public class GameBoardController {
     private void initPointsLabel() {
         lblPoints.getStyleClass().addAll("game-label", "game-points");
     }
-    
-    public void sayHello () {
-        System.out.println("Hello!");
+
+    public void setGridOpererator(GridOperator gridOperator) {
+        this.gridOperator = gridOperator;
+    }
+
+    private void redrawGameGrid(Map<Location, Tile> gameGrid) {
+
+        for (Entry<Location, Tile> entry : gameGrid.entrySet()) {
+            if (entry.getKey() != null) {
+                System.out.println("" + entry.getKey().convertToArrayIndex());
+//                StackPane pane = (StackPane) boardGridPane.getChildren().get(entry.getKey().convertToArrayIndex());
+                updateGridNode((StackPane) boardGridPane.getChildren().get(entry.getKey().convertToArrayIndex()), entry.getValue());
+            }
+        }
+    }
+
+    private void updateGridNode(StackPane pane, Tile tile) {
+        Text text = (Text) pane.getChildren().get(0);
+        if (text.getStyleClass().size() > 0) {
+            text.getStyleClass().remove(0, text.getStyleClass().size());
+        }
+
+        if (pane.getStyleClass().size() > 0) {
+            pane.getStyleClass().remove(0, pane.getStyleClass().size());
+        }
+
+        if (tile == null) {
+            text.getStyleClass().addAll("game-text-0");
+            pane.getStyleClass().addAll("game-tile-0");
+            text.setText("");
+        } else {
+            text.getStyleClass().addAll("game-text-" + tile.getValue());
+            pane.getStyleClass().addAll("game-tile-" + tile.getValue());
+            text.setText("" + tile.getValue());
+        }
+    }
+
+    public void addTile(Tile tile) {
+//        double layoutX = tile.getLocation().getLayoutX(CELL_SIZE) - (tile.getMinWidth() / 2);
+//        double layoutY = tile.getLocation().getLayoutY(CELL_SIZE) - (tile.getMinHeight() / 2);
+//
+//        tile.setLayoutX(layoutX);
+//        tile.setLayoutY(layoutY);
+//        gridGroup.getChildren().add(tile);
     }
 
 }

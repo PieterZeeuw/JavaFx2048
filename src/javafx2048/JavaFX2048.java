@@ -27,7 +27,7 @@ public class JavaFX2048 extends Application {
         Parent root = loader.load();
         GameBoardController controller = (GameBoardController) loader.getController();
         
-        GameManager gameManager = new GameManager (controller);
+        //GameManager gameManager = new GameManager (controller);
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add("javafx2048/game.css");

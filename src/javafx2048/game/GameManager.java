@@ -29,35 +29,26 @@ public class GameManager {
     private final Map<Location, Tile> gameGrid;
     private final Set<Tile> mergedToBeRemoved = new HashSet<>();
 
-    private final GameBoardController board;
-    private final GridOperator gridOperator;
+    private GridOperator gridOperator;
 
-    public GameManager(GameBoardController board) {
-        this(GridOperator.DEFAULT_GRID_SIZE, board);
+    public GameManager() {
+        this(GridOperator.DEFAULT_GRID_SIZE);
     }
 
-    public GameManager(int gridSize, GameBoardController board) {
-        
-        this.board = board;
+    public GameManager(int gridSize) {
+
         this.gameGrid = new HashMap<>();
 
-        gridOperator = new GridOperator(gridSize);
-        //board = new Board(gridOperator);
-        //this.getChildren().add(board);
+        initializeGameGrid();
+        startGame();
     }
-
-    /**
-     * Initializes all cells in gameGrid map to null
-     */
-    private void initializeGameGrid() {
-        gameGrid.clear();
-        locations.clear();
-        gridOperator.traverseGrid((x, y) -> {
-            Location thisloc = new Location(x, y);
-            locations.add(thisloc);
-            gameGrid.put(thisloc, null);
-            return 0;
-        });
+    
+    public void setGridOperator (GridOperator gridOperator) {
+        this.gridOperator = gridOperator;
+    }
+    
+    public Map<Location,Tile> getGameGrid () {
+        return this.gameGrid;
     }
 
     /**
@@ -82,8 +73,30 @@ public class GameManager {
         Arrays.asList(tile0, tile1).stream().filter(Objects::nonNull)
                 .forEach(t -> gameGrid.put(t.getLocation(), t));
 
-        //redrawTilesInGameGrid();
+        redrawTilesInGameGrid();
         //board.startGame();
+    }
+
+    /**
+     * Initializes all cells in gameGrid map to null
+     */
+    private void initializeGameGrid() {
+        gameGrid.clear();
+        locations.clear();
+        gridOperator.traverseGrid((x, y) -> {
+            Location thisloc = new Location(x, y);
+            locations.add(thisloc);
+            gameGrid.put(thisloc, null);
+            return 0;
+        });
+    }
+    
+        
+    /**
+     * Redraws all tiles in the <code>gameGrid</code> object
+     */
+    private void redrawTilesInGameGrid() {
+        //gameGrid.values().stream().filter(Objects::nonNull).forEach(t->boardController.addTile(t));
     }
 
 }
